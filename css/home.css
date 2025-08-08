@@ -131,15 +131,6 @@ body {
     font-weight: bold;
 }
 
-/* Estilo para a navegação */
-.main-nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-}
-
 /* Torna a regra para o dropdown-content mais específica */
 .main-nav .dropdown-content {
     display: none; /* Agora este display: none; terá prioridade */
@@ -157,23 +148,6 @@ body {
 /* O seletor de hover também precisa ser mais específico */
 .main-nav .dropdown:hover .dropdown-content {
     display: block;
-}
-
-.main-nav li {
-    margin-left: 20px;
-}
-
-/* Estilo para os botões de Login e Cadastro */
-.btn-link {
-    background-color: #38a169;
-    border-radius: 5px;
-    padding: 10px 15px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-.btn-link:hover {
-    background-color: #2f855a;
 }
 
 .dropdown {
@@ -194,25 +168,110 @@ body {
     margin-top: 10px;
 }
 
-.dropdown-content li {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.task-section {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 30px;
+    text-align: center;
 }
 
-.dropdown-content a, .dropdown-content span {
+.task-section h2 {
+    font-size: 1.8em;
+    color: #1b4332;
+    margin-bottom: 20px;
+}
+
+.task-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.task-form input[type="text"],
+.task-form input[type="date"] {
+    padding: 12px;
+    border: 1px solid #cdeae1;
+    border-radius: 8px;
+    font-size: 1em;
+    flex: 1 1 250px;
+    background-color: #f1fdf8;
+    color: #34495e;
+}
+
+.task-form button {
+    padding: 12px 20px;
+    background-color: #2d6a4f;
     color: white;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    white-space: normal;
-    transition: background-color 0.3s ease;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-size: 1em;
 }
 
-.dropdown-content a:hover {
-    background-color: #7d6db0;
+.task-form button:hover {
+    background-color: #1b4332;
 }
 
-.dropdown:hover .dropdown-content {
-    display: block;
+/* Lista de tarefas */
+.task-list {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.task-item {
+    background-color: #f1fdf8;
+    border: 1px solid #cdeae1;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-item span {
+    color: #34495e;
+}
+
+.task-item button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #e74c3c;
+    font-size: 1.2em;
+}
+
+/* Calendário */
+.calendar-section {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 30px;
+}
+
+.calendar-section h2 {
+    font-size: 1.8em;
+    color: #1b4332;
+    margin-bottom: 20px;
+}
+
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+#calendar div {
+    background-color: #f1fdf8;
+    border: 1px solid #cdeae1;
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.9em;
+    color: #34495e;
 }
