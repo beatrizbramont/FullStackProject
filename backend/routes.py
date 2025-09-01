@@ -1,18 +1,18 @@
 from flask import request, jsonify, Blueprint
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, Usuario, Tarefa
+from model import db, Usuario, Tarefa
 from config import ALLOWED_STATUSES
 
-api = Blueprint("api", __name__)
+api_bp = Blueprint("api", __name__)
 
 def bad_request(msg, code=400):
     return jsonify({"error": msg}), code
 
-@api.route("/health", methods=["GET"])
-def health():
+@api_bp.route("/estado", methods=["GET"])
+def estado():
     return jsonify({"status": "ok"})
 
-@api.route("/usuarios", methods=["POST"])
+@api_bp.route("/usuarios", methods=["POST"])
 def criar_usuario():
     data = request.get_json() or {}
     nome = data.get("nome")
@@ -35,7 +35,7 @@ def criar_usuario():
     return jsonify({"message": "usuário criado", "usuario_id": usuario.id}), 201
 
 
-@api.route("/login", methods=["POST"])
+@api_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json() or {}
     email = data.get("email")
@@ -59,7 +59,7 @@ def login():
         "usuario": {"id": usuario.id, "nome": usuario.nome, "email": usuario.email}
     })
 
-@api.route("/tarefas", methods=["POST"])
+@api_bp.route("/tarefas", methods=["POST"])
 def criar_tarefa():
     data = request.get_json() or {}
     titulo = data.get("titulo")
@@ -82,7 +82,7 @@ def criar_tarefa():
     return jsonify({"message": "tarefa criada", "tarefa_id": tarefa.id}), 201
 
 
-@api.route("/tarefas/usuario/<int:usuario_id>", methods=["GET"])
+@api_bp.route("/tarefas/usuario/<int:usuario_id>", methods=["GET"])
 def listar_tarefas(usuario_id):
     tarefas = Tarefa.query.filter_by(usuario_id=usuario_id).order_by(Tarefa.id.desc()).all()
     return jsonify([{
@@ -93,7 +93,7 @@ def listar_tarefas(usuario_id):
     } for t in tarefas])
 
 
-@api.route("/tarefas/<int:tarefa_id>", methods=["PUT"])
+@api_bp.route("/tarefas/<int:tarefa_id>", methods=["PUT"])
 def atualizar_tarefa(tarefa_id):
     data = request.get_json() or {}
     tarefa = Tarefa.query.get_or_404(tarefa_id)
@@ -113,7 +113,7 @@ def atualizar_tarefa(tarefa_id):
     return jsonify({"message": "tarefa atualizada"})
 
 
-@api.route("/tarefas/<int:tarefa_id>", methods=["DELETE"])
+@api_bp.route("/tarefas/<int:tarefa_id>", methods=["DELETE"])
 def deletar_tarefa(tarefa_id):
     tarefa = Tarefa.query.get_or_404(tarefa_id)
     db.session.delete(tarefa)

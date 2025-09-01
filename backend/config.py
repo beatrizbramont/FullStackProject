@@ -1,15 +1,26 @@
 import os
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
+from urllib.parse import quote_plus
 
-# deixe DATABASE_URL nas variáveis de ambiente, ex:
-# mysql+pymysql://usuario:senha@host:3306/2manytareas
-# local (fallback) caso a env não exista:
-DEFAULT_LOCAL_DB = "mysql+pymysql://usuario:senha@localhost:3306/2manytareas"
+load_dotenv()
 
+app = Flask(__name__)
 ALLOWED_STATUSES = {"A fazer", "Em progresso", "Concluída", "Não concluída"}
 
-class Config:
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", DEFAULT_LOCAL_DB)
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
-    # CORS – ajuste depois para o domínio do seu front
-    CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*")
+db_user = os.getenv("DB_USER")
+db_pass = os.getenv("DB_PASSWORD")  
+db_host = os.getenv("DB_HOST")
+db_name = os.getenv("DB_NAME")
+db_pass_encoded = quote_plus(db_pass)
+
+app.config['HOST'] = '0.0.0.0'
+app.config['PORT'] = 5000 
+app.config['DEBUG'] = True
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{db_user}:{db_pass_encoded}@{db_host}/{db_name}"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
