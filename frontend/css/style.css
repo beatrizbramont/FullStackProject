@@ -1,0 +1,218 @@
+/* Estilos gerais para todo o corpo da página */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e8f5f2, #cfeee6);
+    margin: 0;
+    padding-top: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Estilo para o cartão principal */
+.card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 90%;
+    max-width: 800px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* bem-vindo */
+.welcome {
+    margin-bottom: 30px;
+}
+
+.welcome h1 {
+    font-size: 2.5em;
+    color: #1b4332;
+    margin-bottom: 10px;
+}
+
+.welcome p {
+    font-size: 1.1em;
+    color: #4a4a4a;
+}
+
+.progres {
+    margin-top: 30px;
+}
+
+.carregando {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px; 
+}
+
+/* cada mini card */
+.rodando {
+    background-color: #f1fdf8;
+    border: 1px solid #cdeae1;
+    border-radius: 10px;
+    padding: 25px;
+    flex: 1 1 45%; 
+    min-width: 250px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rodando:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.rodando h2 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #34495e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilo para os ícones */
+.rodando h2 i {
+    font-size: 1.5em;
+    margin-right: 15px;
+}
+
+/* Cor para os ícones */
+.fa-spinner {
+    color: #38a169;
+}
+
+.fa-circle-check {
+    color: #2ecc71; 
+}
+
+.fa-circle-xmark {
+    color: #e74c3c; 
+}
+
+.fa-circle {
+    color: #95a5a6; 
+}
+
+/* Menu cadastro e login */
+.main-header {
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center;
+    gap: 655px; /* Reduzi o valor para um espaçamento mais padrão */
+    background-color: #2d6a4f;
+    color: white;
+    padding: 15px 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.main-header a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.main-header a:hover {
+    color: #cfeee6;
+}
+
+/* Estilo para o logotipo/nome do site */
+.logo {
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+/* Estilo para a navegação */
+.main-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Torna a regra para o dropdown-content mais específica */
+.main-nav .dropdown-content {
+    display: none; /* Agora este display: none; terá prioridade */
+    position: absolute;
+    background-color: #3c6e58;
+    min-width: 180px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+    top: 100%;
+    left: 0;
+    margin-top: 10px;
+}
+
+/* O seletor de hover também precisa ser mais específico */
+.main-nav .dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.main-nav li {
+    margin-left: 20px;
+}
+
+/* Estilo para os botões de Login e Cadastro */
+.btn-link {
+    background-color: #38a169;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-link:hover {
+    background-color: #2f855a;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #34495e;
+    min-width: 180px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+    top: 100%;
+    left: 0;
+    margin-top: 10px;
+}
+
+.dropdown-content li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-content a, .dropdown-content span {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    white-space: normal;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-content a:hover {
+    background-color: #7d6db0;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}

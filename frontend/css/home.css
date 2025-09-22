@@ -1,0 +1,277 @@
+/* Estilos gerais para todo o corpo da página */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e8f5f2, #cfeee6);
+    margin: 0;
+    padding-top: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Estilo para o cartão principal */
+.card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 90%;
+    max-width: 800px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* bem-vindo */
+.welcome {
+    margin-bottom: 30px;
+}
+
+.welcome h1 {
+    font-size: 2.5em;
+    color: #1b4332;
+    margin-bottom: 10px;
+}
+
+.welcome p {
+    font-size: 1.1em;
+    color: #4a4a4a;
+}
+
+.progres {
+    margin-top: 30px;
+}
+
+.carregando {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px; 
+}
+
+/* cada mini card */
+.rodando {
+    background-color: #f1fdf8;
+    border: 1px solid #cdeae1;
+    border-radius: 10px;
+    padding: 25px;
+    flex: 1 1 45%; 
+    min-width: 250px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rodando:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.rodando h2 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #34495e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilo para os ícones */
+.rodando h2 i {
+    font-size: 1.5em;
+    margin-right: 15px;
+}
+
+/* Cor para os ícones */
+.fa-spinner {
+    color: #38a169;
+}
+
+.fa-circle-check {
+    color: #2ecc71; 
+}
+
+.fa-circle-xmark {
+    color: #e74c3c; 
+}
+
+.fa-circle {
+    color: #95a5a6; 
+}
+
+/* Menu cadastro e login */
+.main-header {
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center;
+    gap: 655px; /* Reduzi o valor para um espaçamento mais padrão */
+    background-color: #2d6a4f;
+    color: white;
+    padding: 15px 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.main-header a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.main-header a:hover {
+    color: #cfeee6;
+}
+
+/* Estilo para o logotipo/nome do site */
+.logo {
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+/* Torna a regra para o dropdown-content mais específica */
+.main-nav .dropdown-content {
+    display: none; /* Agora este display: none; terá prioridade */
+    position: absolute;
+    background-color: #3c6e58;
+    min-width: 180px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+    top: 100%;
+    left: 0;
+    margin-top: 10px;
+}
+
+/* O seletor de hover também precisa ser mais específico */
+.main-nav .dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #34495e;
+    min-width: 180px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+    top: 100%;
+    left: 0;
+    margin-top: 10px;
+}
+
+.task-section {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.task-section h2 {
+    font-size: 1.8em;
+    color: #1b4332;
+    margin-bottom: 20px;
+}
+
+.task-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.task-form input[type="text"],
+.task-form input[type="date"] {
+    padding: 12px;
+    border: 1px solid #cdeae1;
+    border-radius: 8px;
+    font-size: 1em;
+    flex: 1 1 250px;
+    background-color: #f1fdf8;
+    color: #34495e;
+}
+
+.task-form button {
+    padding: 12px 20px;
+    background-color: #2d6a4f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-size: 1em;
+}
+
+.task-form button:hover {
+    background-color: #1b4332;
+}
+
+/* Lista de tarefas */
+.task-list {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.task-item {
+    background-color: #f1fdf8;
+    border: 1px solid #cdeae1;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-item span {
+    color: #34495e;
+}
+
+.task-item button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #e74c3c;
+    font-size: 1.2em;
+}
+
+/* Calendário */
+.calendar-section {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 30px;
+}
+
+.calendar-section h2 {
+    font-size: 1.8em;
+    color: #1b4332;
+    margin-bottom: 20px;
+}
+
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+#calendar div {
+    background-color: #f1fdf8;
+    border: 1px solid #cdeae1;
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.9em;
+    color: #34495e;
+}
