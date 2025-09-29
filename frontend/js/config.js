@@ -1,6 +1,5 @@
-// Conexão com o front-end
 function conectBack(){
-    fetch('http://localhost:5000/tarefas')
+    fetch('http://localhost:8001/tarefas')
       .then(response => response.json())
       .then(data => {
         const lista = document.getElementById('lista-tarefas');
