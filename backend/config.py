@@ -1,3 +1,4 @@
+# config.py
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -7,7 +8,8 @@ from flasgger import Swagger
 load_dotenv()
 
 app = Flask(__name__)
-swagger = Swagger(app)
+
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "chave_secreta")
 
 app.config['HOST'] = '0.0.0.0'
 app.config['PORT'] = 8001
@@ -21,6 +23,7 @@ app.config['SWAGGER'] = {
     'uiversion': 3
 }
 
+swagger = Swagger(app)
 ALLOWED_STATUSES = {"A fazer", "Em andamento", "Concluído"}
 
 db = SQLAlchemy(app)

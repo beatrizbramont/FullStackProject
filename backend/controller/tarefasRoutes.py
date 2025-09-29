@@ -11,7 +11,19 @@ def bad_request(msg, code=400):
 
 @api_bp.route("/estado", methods=["GET"])
 def estado():
+    """
+    Retorna status do backend
+    ---
+    tags:
+      - Healthcheck
+    responses:
+      200:
+        description: API está online
+        examples:
+          application/json: { "status": "ok" }
+    """
     return jsonify({"status": "ok"})
+
 
 @api_bp.route("/tarefas", methods=["POST"])
 def criar_tarefa():
@@ -25,7 +37,7 @@ def criar_tarefa():
         in: body
         required: true
         schema:
-          id: Tarefa
+          id: TarefaCreate
           required:
             - titulo
             - usuario_id
@@ -45,12 +57,20 @@ def criar_tarefa():
     responses:
       201:
         description: Tarefa criada com sucesso
+        schema:
+          properties:
+            message:
+              type: string
+              example: tarefa criada
+            tarefa:
+              type: object
       400:
         description: Dados inválidos
     """
     data = request.get_json() or {}
     titulo = data.get("titulo")
     usuario_id = data.get("usuario_id")
+    descricao = data.get("descricao", "").strip()
     status = data.get("status", "A fazer")
 
     if not all([titulo, usuario_id]):
@@ -62,10 +82,24 @@ def criar_tarefa():
     if not Usuario.query.get(usuario_id):
         return bad_request("usuario_id inexistente")
 
-    tarefa = Tarefa(titulo=titulo.strip(), status=status, usuario_id=usuario_id)
+    tarefa = Tarefa(
+        titulo=titulo.strip(),
+        descricao=descricao,
+        status=status,
+        usuario_id=usuario_id
+    )
     db.session.add(tarefa)
     db.session.commit()
-    return jsonify({"message": "tarefa criada", "tarefa_id": tarefa.id}), 201
+    return jsonify({
+        "message": "tarefa criada",
+        "tarefa": {
+            "id": tarefa.id,
+            "titulo": tarefa.titulo,
+            "descricao": tarefa.descricao,
+            "status": tarefa.status,
+            "usuario_id": tarefa.usuario_id
+        }
+    }), 201
 
 
 @api_bp.route("/tarefas/usuario/<int:usuario_id>", methods=["GET"])
@@ -84,14 +118,26 @@ def listar_tarefas(usuario_id):
     responses:
       200:
         description: Lista de tarefas
+        schema:
+          type: array
+          items:
+            properties:
+              id: {type: integer}
+              titulo: {type: string}
+              descricao: {type: string}
+              status: {type: string}
+              usuario_id: {type: integer}
     """
     tarefas = Tarefa.query.filter_by(usuario_id=usuario_id).order_by(Tarefa.id.desc()).all()
-    return jsonify([{
-        "id": t.id,
-        "titulo": t.titulo,
-        "status": t.status,
-        "usuario_id": t.usuario_id
-    } for t in tarefas])
+    return jsonify([
+        {
+            "id": t.id,
+            "titulo": t.titulo,
+            "descricao": t.descricao,
+            "status": t.status,
+            "usuario_id": t.usuario_id
+        } for t in tarefas
+    ])
 
 
 @api_bp.route("/tarefas/<int:tarefa_id>", methods=["PUT"])
@@ -124,6 +170,10 @@ def atualizar_tarefa(tarefa_id):
     responses:
       200:
         description: Tarefa atualizada
+        schema:
+          properties:
+            message: {type: string, example: tarefa atualizada}
+            tarefa: {type: object}
       400:
         description: Dados inválidos
       404:
@@ -133,10 +183,14 @@ def atualizar_tarefa(tarefa_id):
     tarefa = Tarefa.query.get_or_404(tarefa_id)
 
     novo_titulo = data.get("titulo")
+    nova_descricao = data.get("descricao")
     novo_status = data.get("status")
 
     if novo_titulo is not None:
         tarefa.titulo = novo_titulo.strip() or tarefa.titulo
+
+    if nova_descricao is not None:
+        tarefa.descricao = nova_descricao.strip() or tarefa.descricao
 
     if novo_status is not None:
         if novo_status not in ALLOWED_STATUSES:
@@ -144,7 +198,16 @@ def atualizar_tarefa(tarefa_id):
         tarefa.status = novo_status
 
     db.session.commit()
-    return jsonify({"message": "tarefa atualizada"})
+    return jsonify({
+        "message": "tarefa atualizada",
+        "tarefa": {
+            "id": tarefa.id,
+            "titulo": tarefa.titulo,
+            "descricao": tarefa.descricao,
+            "status": tarefa.status,
+            "usuario_id": tarefa.usuario_id
+        }
+    })
 
 
 @api_bp.route("/tarefas/<int:tarefa_id>", methods=["DELETE"])
@@ -163,6 +226,11 @@ def deletar_tarefa(tarefa_id):
     responses:
       200:
         description: Tarefa deletada com sucesso
+        schema:
+          properties:
+            message:
+              type: string
+              example: tarefa deletada
       404:
         description: Tarefa não encontrada
     """
