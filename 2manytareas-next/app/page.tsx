@@ -1,20 +1,56 @@
-import Link from 'next/link'
-import Header from '../components/Header'
+'use client'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { ClipboardList, CheckCircle2, Clock, Hourglass, PlusCircle } from 'lucide-react'
+import HeaderPublic from '../components/HeaderPublic'
 
+export default function HomePage() {
+  const router = useRouter()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-export default function Index() {
-return (
-<main className="min-h-screen flex flex-col items-center justify-start p-6">
-  <Header />
-    <section className="max-w-3xl w-full mt-8 bg-white p-6 rounded-2xl shadow-md">
-      <h1 className="text-2xl font-bold">2ManyTareas</h1>
-      <p className="mt-2 text-slate-600">Uma agenda de tarefas simples com calendário integrado.</p>
-      <div className="mt-6 flex gap-3">
-        <Link href="/login" className="px-4 py-2 rounded-md bg-slate-800 text-white">Login</Link>
-        <Link href="/cadastro" className="px-4 py-2 rounded-md border border-slate-300">Criar Tarefa</Link>
-        <Link href="/home" className="px-4 py-2 rounded-md bg-emerald-500 text-white">Ir para Home</Link>
-      </div>
-    </section>
-</main>
-)
+  useEffect(() => {
+    const user = localStorage.getItem('usuario_nome')
+    setIsAuthenticated(!!user)
+  }, [])
+
+  const handleRedirect = (path: string) => {
+    if (isAuthenticated) {
+      router.push(path)
+    } else {
+      router.push('/login')
+    }
+  }
+
+  const buttons = [
+    { label: 'Em andamento', icon: <Clock className="w-6 h-6" />, color: 'bg-yellow-800 hover:bg-yellow-400 text-gray-900' },
+    { label: 'Concluída', icon: <CheckCircle2 className="w-6 h-6" />, color: 'bg-green-800 hover:bg-green-500 text-white' },
+    { label: 'A fazer', icon: <ClipboardList className="w-6 h-6" />, color: 'bg-blue-800 hover:bg-blue-500 text-white' },
+    { label: 'Aguardando', icon: <Hourglass className="w-6 h-6" />, color: 'bg-purple-800 hover:bg-purple-500 text-white' },
+    { label: 'Criar tarefa', icon: <PlusCircle className="w-6 h-6" />, color: 'bg-emerald-800 hover:bg-emerald-400 text-white' },
+  ]
+
+  return (
+    <div className="min-h-screen bg-green-100 text-green-100 flex flex-col">
+      <HeaderPublic />
+
+      <main className="flex flex-col items-center justify-center flex-1 py-24 px-4">
+        <p className="text-green-950 text-center max-w-lg mb-12">
+          Seja Bem-Vindo ao 2ManyTareas, o site que irá te ajudar a organizar suas tarefas de forma prática e eficiente. Faça login ou cadastre-se para começar!
+        </p>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 w-full max-w-lg">
+          {buttons.map((btn, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleRedirect('/tarefas')}
+              className={`flex flex-col items-center justify-center p-4 rounded-2xl ${btn.color} transition transform hover:scale-105`}
+            >
+              {btn.icon}
+              <span className="text-sm mt-2">{btn.label}</span>
+            </button>
+          ))}
+        </div>
+      </main>
+    </div>
+  )
 }

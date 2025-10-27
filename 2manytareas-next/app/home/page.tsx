@@ -1,29 +1,153 @@
 'use client'
-import React from 'react'
-import { useAuth } from '../../lib/useauth'
+
+import React, { useEffect, useState } from 'react'
+import { PlusCircle, Edit, Trash2 } from 'lucide-react'
 import Header from '../../components/Header'
-import Link from 'next/link'
+import ModalTarefa from '../../components/ModalTarefa'
+import { useAuth } from '../../lib/useauth'
+import { getTasks, deleteTaskAPI } from '../../lib/tasks'
+import { Task } from '../../lib/types'
 
 export default function Home() {
-  useAuth() // protege a rota
+  useAuth()
+
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [loading, setLoading] = useState(true)
+  const [usuarioId, setUsuarioId] = useState<number | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [taskToEdit, setTaskToEdit] = useState<Task | undefined>(undefined)
+
+  useEffect(() => {
+    const id = localStorage.getItem('usuario_id')
+    if (id) setUsuarioId(Number(id))
+  }, [])
+
+  useEffect(() => {
+    if (!usuarioId) return
+    fetchTasks()
+  }, [usuarioId])
+
+  const fetchTasks = async () => {
+    try {
+      setLoading(true)
+      if (usuarioId) {
+        const data = await getTasks(usuarioId)
+        setTasks(data)
+      }
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteTaskAPI(id)
+      setTasks(prev => prev.filter(t => t.id !== id))
+    } catch (err) {
+      console.error(err)
+      alert('Erro ao deletar tarefa')
+    }
+  }
+
+  const statusColors: Record<Task['status'], string> = {
+    'A fazer': 'bg-blue-800 border-blue-600',
+    'Em andamento': 'bg-yellow-800 border-yellow-600',
+    'Concluído': 'bg-green-800 border-green-600',
+    'Aguardando': 'bg-purple-800 border-purple-600',
+  }
+
+  const groupedTasks: Record<Task['status'], Task[]> = {
+    'A fazer': [],
+    'Em andamento': [],
+    'Concluído': [],
+    'Aguardando': [],
+  }
+  tasks.forEach(t => groupedTasks[t.status].push(t))
+
+  if (usuarioId === null) return <p className="text-center mt-20">Carregando...</p>
+  if (loading) return <p className="text-center mt-20">Carregando tarefas...</p>
 
   return (
     <>
-      <Header />
-      <main className="min-h-screen bg-green-950 text-white flex flex-col items-center justify-center gap-6 px-4">
-        <h1 className="text-5xl font-extrabold text-green-400 mb-4">Bem-vindo(a)!</h1>
-        <p className="text-lg text-white/80 text-center max-w-lg">
-          Aqui você pode gerenciar suas tarefas, acompanhar o calendário e organizar seu dia.
-        </p>
-        <div className="flex gap-4 mt-6">
-          <Link href="/tarefas" className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-semibold transition">
-            Minhas Tarefas
-          </Link>
-          <Link href="/calendar" className="bg-white text-green-950 hover:bg-white/90 px-6 py-3 rounded-lg font-semibold transition">
-            Calendário
-          </Link>
-        </div>
+      <Header tasks={tasks} />
+      <main className="min-h-screen flex flex-col items-center py-8 px-4 bg-green-100 text-gray-100">
+        <section className="max-w-4xl w-full">
+          <h1 className="text-3xl text-green-950 font-bold mb-2">Minhas Tarefas</h1>
+          <p className="text-green-950 mb-6">Gerencie suas atividades por status.</p>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+            {(['A fazer', 'Em andamento', 'Concluído', 'Aguardando'] as Task['status'][]).map(status => (
+              <div
+                key={status}
+                className={`flex flex-col items-center justify-center p-4 rounded-2xl border ${statusColors[status]}`}
+              >
+                <span className="font-medium">{status}</span>
+                <span className="text-sm">{groupedTasks[status].length} tarefas</span>
+              </div>
+            ))}
+            <button
+              onClick={() => { setTaskToEdit(undefined); setModalOpen(true) }}
+              className="flex flex-col items-center justify-center p-4 rounded-2xl bg-emerald-600 text-white hover:bg-emerald-500 transition"
+            >
+              <PlusCircle size={28} />
+              <span className="text-sm mt-2">Criar tarefa</span>
+            </button>
+          </div>
+
+          <div className="flex text-green-950 flex-col gap-6">
+            {(['A fazer', 'Em andamento', 'Concluído', 'Aguardando'] as Task['status'][]).map(status => {
+              const tasksDoStatus = groupedTasks[status]
+              if (!tasksDoStatus.length) return null
+              return (
+                <div key={status}>
+                  <h3 className="font-semibold text-lg mb-2">{status}</h3>
+                  <div className="flex flex-col gap-2">
+                    {tasksDoStatus.map(task => (
+                      <div
+                        key={task.id}
+                        className={`p-3 border rounded flex items-center justify-between cursor-pointer ${statusColors[status]}`}
+                      >
+                        <div>
+                          <div className="font-medium">{task.titulo}</div>
+                          <div className="text-sm text-gray-300">{task.descricao}</div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Edit
+                            size={18}
+                            className="cursor-pointer hover:text-green-400"
+                            onClick={() => { setTaskToEdit(task); setModalOpen(true) }}
+                          />
+                          <Trash2
+                            size={18}
+                            className="cursor-pointer hover:text-red-400"
+                            onClick={() => handleDelete(task.id)}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </section>
       </main>
+
+      <ModalTarefa
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        usuarioId={usuarioId!}
+        taskToEdit={taskToEdit}
+        onSaved={(task) => {
+          setTasks(prev => {
+            const exists = prev.find(t => t.id === task.id)
+            if (exists) return prev.map(t => (t.id === task.id ? task : t))
+            return [...prev, task]
+          })
+        }}
+      />
     </>
   )
 }

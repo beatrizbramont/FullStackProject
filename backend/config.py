@@ -24,6 +24,6 @@ app.config['SWAGGER'] = {
 }
 
 swagger = Swagger(app)
-ALLOWED_STATUSES = {"A fazer", "Em andamento", "Concluído"}
+ALLOWED_STATUSES = {"A fazer", "Em andamento", "Concluído", "Aguardando"}
 
 db = SQLAlchemy(app)

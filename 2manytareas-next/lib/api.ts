@@ -1,33 +1,53 @@
-export const API_URL = 'http://localhost:8001'  // Backend Flask
+// lib/api.ts
 
-export async function getJSON(endpoint: string) {
-  const res = await fetch(`${API_URL}${endpoint}`)
-  if (!res.ok) throw new Error(`Erro na API: ${res.status}`)
+const API_URL = 'http://127.0.0.1:8001'
+
+// Função genérica para GET
+export async function getJSON(path: string) {
+  const res = await fetch(`${API_URL}${path}`)
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error || 'Erro na requisição GET')
+  }
   return res.json()
 }
 
-export async function postJSON(endpoint: string, body: any) {
-  const res = await fetch(`${API_URL}${endpoint}`, {
+// Função genérica para POST
+export async function postJSON(path: string, data: any) {
+  const res = await fetch(`${API_URL}${path}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body: JSON.stringify(data),
   })
-  if (!res.ok) throw new Error((await res.json()).error || 'Erro na API')
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error || 'Erro na requisição POST')
+  }
   return res.json()
 }
 
-export async function putJSON(endpoint: string, body: any) {
-  const res = await fetch(`${API_URL}${endpoint}`, {
+// Função genérica para PUT
+export async function putJSON(path: string, data: any) {
+  const res = await fetch(`${API_URL}${path}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body: JSON.stringify(data),
   })
-  if (!res.ok) throw new Error((await res.json()).error || 'Erro na API')
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error || 'Erro na requisição PUT')
+  }
   return res.json()
 }
 
-export async function deleteJSON(endpoint: string) {
-  const res = await fetch(`${API_URL}${endpoint}`, { method: 'DELETE' })
-  if (!res.ok) throw new Error((await res.json()).error || 'Erro na API')
+// Função genérica para DELETE
+export async function deleteJSON(path: string) {
+  const res = await fetch(`${API_URL}${path}`, {
+    method: 'DELETE',
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error || 'Erro na requisição DELETE')
+  }
   return res.json()
 }

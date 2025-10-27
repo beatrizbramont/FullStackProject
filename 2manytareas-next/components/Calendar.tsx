@@ -1,50 +1,54 @@
 'use client'
-import React, { useMemo } from 'react'
+
+import React, { useState } from 'react'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 import { Task } from '../lib/types'
 
-type CalendarProps = { tasks: Task[] }
+type CalendarProps = {
+  tasks: Task[]
+}
 
 export default function Calendar({ tasks }: CalendarProps) {
-  const today = new Date()
-  const year = today.getFullYear()
-  const month = today.getMonth()
+  const [date, setDate] = useState(new Date())
 
-  const days = useMemo(() => {
-    const first = new Date(year, month, 1)
-    const startDay = first.getDay()
-    const totalDays = new Date(year, month + 1, 0).getDate()
-    const cells: (Date | null)[] = []
+  const getTasksForDate = (d: Date) => {
+    const dateStr = d.toISOString().slice(0, 10)
+    return tasks.filter(t => t.startDate === dateStr || t.endDate === dateStr)
+  }
 
-    for (let i = 0; i < startDay; i++) cells.push(null)
-    for (let d = 1; d <= totalDays; d++) cells.push(new Date(year, month, d))
-
-    return cells
-  }, [year, month])
-
-  function tasksFor(date: Date | null) {
-    if (!date) return []
-    const key = date.toISOString().slice(0, 10)
-    return tasks.filter(t => t.date === key)
+  const dayClassName = (d: Date) => {
+    const hasTask = getTasksForDate(d).length > 0
+    return hasTask
+      ? 'relative before:absolute before:bottom-1 before:left-1/2 before:-translate-x-1/2 before:w-1.5 before:h-1.5 before:rounded-full before:bg-green-300 text-white'
+      : 'text-green-100'
   }
 
   return (
-    <div className="grid grid-cols-7 gap-1 mt-2">
-      {days.map((day,i) => (
-        <div key={i} className="border rounded-lg p-1 h-24 flex flex-col bg-green-50">
-          {day && <>
-            <div className="font-medium text-center text-green-700">{day.getDate()}</div>
-            <div className="flex flex-col gap-1 mt-1 overflow-auto">
-              {tasksFor(day).map(t => (
-                <div key={t.id} className={`px-1 rounded text-[10px] truncate
-                  ${t.status === 'Concluído' ? 'bg-green-600 text-white' : 
-                    t.status === 'Em andamento' ? 'bg-green-400 text-white' : 'bg-green-200 text-green-800'}`}>
-                  {t.titulo}
-                </div>
-              ))}
+    <div className="absolute z-50 mt-2 bg-green-950 p-4 rounded-lg shadow-lg w-64">
+      <DatePicker
+        selected={date}
+        onChange={d => d && setDate(d)}
+        inline
+        calendarClassName="bg-green-950 text-white border-none rounded-lg p-2"
+        dayClassName={dayClassName}
+      />
+
+      {/* Lista de tarefas do dia */}
+      <div className="mt-3 max-h-40 overflow-auto">
+        {getTasksForDate(date).length === 0 ? (
+          <p className="text-green-100 text-sm px-2">Nenhuma tarefa neste dia</p>
+        ) : (
+          getTasksForDate(date).map(task => (
+            <div
+              key={task.id}
+              className="bg-green-300 text-green-950 rounded px-2 py-1 text-sm mb-1"
+            >
+              {task.titulo}
             </div>
-          </>}
-        </div>
-      ))}
+          ))
+        )}
+      </div>
     </div>
   )
 }
