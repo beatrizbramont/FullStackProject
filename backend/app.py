@@ -5,7 +5,7 @@ from controller.authRoutes import auth_bp
 from sqlalchemy import inspect
 from flask_cors import CORS
 
-CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
+CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://10.53.212.55:3000"], supports_credentials=True)
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(usuario_routes)

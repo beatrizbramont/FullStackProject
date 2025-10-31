@@ -8,7 +8,7 @@ import { useAuth } from '../../lib/useauth'
 import { getTasks, deleteTaskAPI } from '../../lib/tasks'
 import { Task } from '../../lib/types'
 
-export default function Home() {
+export default function HomePage() {
   useAuth()
 
   const [tasks, setTasks] = useState<Task[]>([])
@@ -16,8 +16,10 @@ export default function Home() {
   const [usuarioId, setUsuarioId] = useState<number | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [taskToEdit, setTaskToEdit] = useState<Task | undefined>(undefined)
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
+    setIsClient(true)
     const id = localStorage.getItem('usuario_id')
     if (id) setUsuarioId(Number(id))
   }, [])
@@ -51,6 +53,10 @@ export default function Home() {
     }
   }
 
+  if (!isClient) return null // não renderiza nada no SSR
+  if (usuarioId === null) return <p className="text-center mt-20">Carregando...</p>
+  if (loading) return <p className="text-center mt-20">Carregando tarefas...</p>
+
   const statusColors: Record<Task['status'], string> = {
     'A fazer': 'bg-blue-800 border-blue-600',
     'Em andamento': 'bg-yellow-800 border-yellow-600',
@@ -66,16 +72,13 @@ export default function Home() {
   }
   tasks.forEach(t => groupedTasks[t.status].push(t))
 
-  if (usuarioId === null) return <p className="text-center mt-20">Carregando...</p>
-  if (loading) return <p className="text-center mt-20">Carregando tarefas...</p>
-
   return (
     <>
       <Header tasks={tasks} />
-      <main className="min-h-screen flex flex-col items-center py-8 px-4 bg-green-100 text-gray-100">
+      <main className="min-h-screen flex flex-col items-center py-8 px-4 bg-slate-900 text-slate-100">
         <section className="max-w-4xl w-full">
-          <h1 className="text-3xl text-green-950 font-bold mb-2">Minhas Tarefas</h1>
-          <p className="text-green-950 mb-6">Gerencie suas atividades por status.</p>
+          <h1 className="text-3xl text-emerald-400 font-bold mb-2">Minhas Tarefas</h1>
+          <p className="text-slate-400 mb-6">Gerencie suas atividades por status.</p>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
             {(['A fazer', 'Em andamento', 'Concluído', 'Aguardando'] as Task['status'][]).map(status => (
@@ -87,6 +90,7 @@ export default function Home() {
                 <span className="text-sm">{groupedTasks[status].length} tarefas</span>
               </div>
             ))}
+
             <button
               onClick={() => { setTaskToEdit(undefined); setModalOpen(true) }}
               className="flex flex-col items-center justify-center p-4 rounded-2xl bg-emerald-600 text-white hover:bg-emerald-500 transition"
@@ -96,7 +100,7 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="flex text-green-950 flex-col gap-6">
+          <div className="flex flex-col gap-6 text-slate-100">
             {(['A fazer', 'Em andamento', 'Concluído', 'Aguardando'] as Task['status'][]).map(status => {
               const tasksDoStatus = groupedTasks[status]
               if (!tasksDoStatus.length) return null
@@ -111,12 +115,12 @@ export default function Home() {
                       >
                         <div>
                           <div className="font-medium">{task.titulo}</div>
-                          <div className="text-sm text-gray-300">{task.descricao}</div>
+                          <div className="text-sm text-slate-300">{task.descricao}</div>
                         </div>
                         <div className="flex gap-2">
                           <Edit
                             size={18}
-                            className="cursor-pointer hover:text-green-400"
+                            className="cursor-pointer hover:text-emerald-400"
                             onClick={() => { setTaskToEdit(task); setModalOpen(true) }}
                           />
                           <Trash2

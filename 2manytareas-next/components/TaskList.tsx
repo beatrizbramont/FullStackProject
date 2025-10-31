@@ -12,18 +12,18 @@ type TaskListProps = {
 
 export default function TaskList({ tasks, onDelete, onEdit, onUpdateStatus }: TaskListProps) {
   const statusColors: Record<Task['status'], string> = {
-    'A fazer': 'bg-blue-100 border-blue-400',
-    'Em andamento': 'bg-yellow-100 border-yellow-400',
-    'Concluído': 'bg-green-100 border-green-400',
-    'Aguardando': 'bg-purple-100 border-purple-400',
+    'A fazer': 'bg-blue-800 border-blue-600 text-white',
+    'Em andamento': 'bg-yellow-800 border-yellow-600 text-white',
+    'Concluído': 'bg-green-800 border-green-600 text-white',
+    'Aguardando': 'bg-purple-800 border-purple-600 text-white',
   }
 
   function getStatusIcon(status: Task['status']) {
     switch (status) {
-      case 'A fazer': return <ClipboardList size={20} />
-      case 'Em andamento': return <Clock size={20} />
-      case 'Concluído': return <CheckCircle size={20} />
-      case 'Aguardando': return <Hourglass size={20} />
+      case 'A fazer': return <ClipboardList size={20} className="text-white" />
+      case 'Em andamento': return <Clock size={20} className="text-white" />
+      case 'Concluído': return <CheckCircle size={20} className="text-white" />
+      case 'Aguardando': return <Hourglass size={20} className="text-white" />
     }
   }
 
@@ -42,29 +42,29 @@ export default function TaskList({ tasks, onDelete, onEdit, onUpdateStatus }: Ta
         if (!tasksDoStatus.length) return null
         return (
           <div key={status}>
-            <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
+            <h3 className="font-semibold text-lg mb-2 flex items-center gap-2 text-emerald-400">
               {getStatusIcon(status)} {status}
             </h3>
             <div className="flex flex-col gap-2">
               {tasksDoStatus.map(task => (
                 <div
                   key={task.id}
-                  className={`p-3 border rounded flex items-center justify-between cursor-pointer ${statusColors[status]}`}
+                  className={`p-3 border rounded flex items-center justify-between cursor-pointer ${statusColors[status]} transition hover:bg-slate-700`}
                   onClick={() => onUpdateStatus(task)}
                 >
                   <div>
                     <div className="font-medium">{task.titulo}</div>
-                    <div className="text-sm text-slate-600">{task.descricao}</div>
+                    <div className="text-sm text-slate-300">{task.descricao}</div>
                   </div>
                   <div className="flex gap-2">
                     <Edit2
                       size={20}
-                      className="text-blue-600 cursor-pointer"
+                      className="cursor-pointer text-emerald-400 hover:text-emerald-300 transition"
                       onClick={e => { e.stopPropagation(); onEdit(task) }}
                     />
                     <Trash2
                       size={20}
-                      className="text-red-600 cursor-pointer"
+                      className="cursor-pointer text-red-500 hover:text-red-400 transition"
                       onClick={e => { e.stopPropagation(); onDelete(task.id) }}
                     />
                   </div>
