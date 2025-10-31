@@ -1,36 +1,161 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧩 Frontend - 2ManyTareas
+Interface web moderna e responsiva desenvolvida com **Next.js**, **TypeScript** e **Tailwind CSS**, responsável pela experiência do usuário do sistema **2ManyTareas** — uma aplicação para controle de tarefas e produtividade.
 
-## Getting Started
+---
 
-First, run the development server:
+## 🚀 Tecnologias utilizadas
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Next.js 14+** — Framework React com suporte a rotas dinâmicas e SSR.  
+- **TypeScript** — Tipagem estática para maior segurança e escalabilidade.  
+- **Tailwind CSS** — Estilização rápida e consistente.  
+- **Lucide Icons** — Ícones modernos e personalizáveis.  
+- **React DatePicker** — Componente de calendário customizado.  
+- **Axios / Fetch API** — Comunicação com o backend Flask.  
+
+---
+
+## ⚙️ Estrutura do projeto
+
+```
+frontend/
+├── app/
+│   ├── cadastro/
+│       ├── page.tsx 
+│   ├── home/
+│       ├── page.tsx                
+│   ├── login/
+│       ├── page.tsx 
+│   ├── favicon.ico
+│   ├── global.css
+│   ├── layout.tsx
+│   └── page.tsx  
+├── components/           
+│   ├── Calendar.tsx
+│   ├── Header.tsx
+│   ├── HeaderPublic.css
+│   ├── ModalTarefa.tsx
+│   └── TaskList.tsx  
+├── lib/                   
+│   └── api.ts
+│   ├── tasks.ts
+│   ├── types.ts
+│   └── useauth.ts  
+├── node_modules/
+├── public/                
+├── .gitignore
+├── eslint.config.mjs
+├── index.tsx
+├── next-env.d.ts
+├── next.config.mjs
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── tsconfig.json             
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧰 Pré-requisitos
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Antes de iniciar, verifique se você possui instalado em sua máquina:
 
-## Learn More
+- [Node.js 18+](https://nodejs.org/)
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ▶️ Como executar o projeto
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 1. Instale as dependências
+```bash
+npm install
+# ou
+yarn install
+```
 
-## Deploy on Vercel
+### 2. Crie um arquivo `.env.local`
+Exemplo:
+```env
+NEXT_PUBLIC_API_URL=http://127.0.0.1:5000
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Execute o servidor de desenvolvimento
+```bash
+npm run dev
+# ou
+yarn dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+O projeto estará disponível em:
+👉 [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 🌙 Tema e UI
+
+O design segue uma identidade visual escura com tons de **verde e azul**, transmitindo modernidade e foco.  
+Todos os componentes foram desenvolvidos com **responsividade** e **usabilidade** em mente, adaptando-se a diferentes tamanhos de tela.
+
+---
+
+## 🔗 Integração com o Backend
+
+O frontend se comunica com a API desenvolvida em **Flask**, responsável pelo gerenciamento de:
+- Usuários e autenticação (login/cadastro)
+- Tarefas e status
+- Progresso das atividades
+
+As rotas são configuradas via `.env.local`, permitindo fácil alternância entre ambiente local e produção.
+
+Exemplo de integração com API Flask:
+
+```ts
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+});
+
+export async function getTasks() {
+  const response = await api.get("/tarefas");
+  return response.data;
+}
+```
+
+---
+
+## 🧪 Scripts disponíveis
+
+| Comando              | Descrição |
+|----------------------|-----------|
+| `npm run dev`        | Inicia o servidor de desenvolvimento |
+| `npm run build`      | Gera a versão otimizada para produção |
+| `npm start`          | Executa a versão buildada |
+| `npm run lint`       | Verifica e corrige erros de lint |
+
+---
+
+## 🖼️ Pré-visualização
+
+### 🏠 Tela inicial
+![Home e Status](./public/home.png)
+
+### 📅 Calendário de tarefas
+![Calendário](./public/calendar.png)
+
+### ✅ Status das tarefas
+![Status](./public/index.png)
+
+---
+
+## 👩‍💻 Desenvolvido por
+
+**Beatriz Bramont**  
+💼 Estagiária em TI | Desenvolvedora Full Stack em formação  
+🌐 [GitHub](https://github.com/beatrizbramont)
+
+---
+
+> “Organize suas ideias, priorize suas tarefas e torne sua rotina mais leve — com 2ManyTareas.”
+
